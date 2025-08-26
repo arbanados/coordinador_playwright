@@ -34,6 +34,7 @@ jobs:
       - name: Run scraper (headless)
         env:
           HEADLESS: "true"
+          DEBUG: "pw:api" 
         run: python scrape.py
 
       - name: Prepare data files
@@ -59,3 +60,16 @@ jobs:
             git commit -m "data: update CMg CSV (${{ steps.prep.outputs.today }})"
             git push
           fi
+                
+      - name: Upload debug artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-artifacts
+          path: |
+            trace.zip
+            page.png
+            page-error.png
+            downloads/**
+          if-no-files-found: ignore
+
