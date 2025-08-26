@@ -3,7 +3,9 @@ from datetime import datetime
 import asyncio
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 
-HEADLESS = False
+import os
+HEADLESS = os.getenv("HEADLESS", "true").lower() == "true"
+
 date_suffix = datetime.now().strftime("-%m-%d")  # e.g., "-08-26"
 downloads_dir = Path("downloads")
 downloads_dir.mkdir(exist_ok=True)
@@ -29,7 +31,8 @@ async def run():
         except PlaywrightTimeoutError:
             print("Download failed or timed out")
             await browser.close()
-            return
+            raise SystemExit(1)
+
 
         # 4) Save file
         save_path = downloads_dir / download.suggested_filename
