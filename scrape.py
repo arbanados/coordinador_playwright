@@ -40,4 +40,4 @@ async def run():
         print(f"Saved file to: {save_path.resolve()}")
 
         await browser.close()
-await run()  # Jupyter supports top-level `await`
+asyncio.run()
